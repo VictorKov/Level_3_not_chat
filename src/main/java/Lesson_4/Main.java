@@ -8,25 +8,30 @@ public class Main {
 
             Main w = new Main();
             Thread t1 = new Thread(() -> {
-                w.printA();
+                w.methodA();
             });
             Thread t2 = new Thread(() -> {
-                w.printB();
+                w.methodB();
             });
-            t1.start();
-            t2.start();
+
+            Thread t3 = new Thread(()-> {
+                w.methodC();
+            });
+                t1.start();
+                t2.start();
+                t3.start();
         }
 
-        public void printA() {
+        public void methodA() {
             synchronized (mon) {
                 try {
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < 5; i++) {
                         while (currentLetter != 'A') {
                             mon.wait();
                         }
                         System.out.print("A");
                         currentLetter = 'B';
-                        mon.notify();
+                        mon.notifyAll();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -34,22 +39,40 @@ public class Main {
             }
         }
 
-        public void printB() {
+        public void methodB() {
             synchronized (mon) {
                 try {
-                    for (int i = 0; i < 3; i++) {
+                    for (int i = 0; i < 5; i++) {
                         while (currentLetter != 'B') {
                             mon.wait();
                         }
                         System.out.print("B");
-                        currentLetter = 'A';
-                        mon.notify();
+                        currentLetter = 'C';
+                        mon.notifyAll();
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
+        public void methodC() {
+        synchronized (mon) {
+            try {
+                for (int i = 0; i < 5; i++) {
+                    while (currentLetter != 'C') {
+                        mon.wait();
+                    }
+
+                    System.out.println("C");
+                    currentLetter = 'A';
+                    mon.notifyAll();
+
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
+}
 
 
