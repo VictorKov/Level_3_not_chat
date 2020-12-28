@@ -1,6 +1,6 @@
 package Lesson_5;
 
-public class Car {
+public class Car implements Runnable {
     private static int CARS_COUNT;
     static {
         CARS_COUNT = 0;
